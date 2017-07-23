@@ -29,7 +29,7 @@ The IPython Notebook *TwoLayerClassifier.ipynb* (*Two_layerNN.py*) will walk you
 
 # Assignment 2
 
-In this assignment you will practice writing backpropagation code, and training Neural Networks and Convolutional Neural Networks. The goals of this assignment are as follows:
+In assignment 2, you will practice writing backpropagation code, and training Neural Networks and Convolutional Neural Networks. The goals of this assignment are as follows:
 
 - understand **Neural Networks** and how they are arranged in layered architectures
 - understand and be able to implement (vectorized) **backpropagation**
