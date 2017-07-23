@@ -66,7 +66,7 @@ for param_name in sorted(grads):
 #############################################################################
 
 # Load the CIFAR10 data.
-DIR_data = 'D:/Python Machine learning/'
+DIR_data = '../../DataSet/cifar-10-batches-py/'
 # the mean image has been sub-tracted
 data = get_CIFAR10_data(DIR_data, num_training=28000, num_validation=2000)
 for k, v in data.items():

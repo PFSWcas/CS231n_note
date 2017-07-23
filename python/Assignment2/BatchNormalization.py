@@ -132,6 +132,12 @@ print('dbeta difference: ', rel_error(dbeta1, dbeta2))
 #############################################################################
 #                     Batch Normalization Initialization
 #############################################################################
+# Load the CIFAR10 data.
+DIR_data = '../../DataSet/cifar-10-batches-py/'
+# the mean image has been sub-tracted
+data = get_CIFAR10_data(DIR_data, num_training=49000, num_validation=1000)
+for k, v in data.items():
+  print("The shape of %s is " %k,v.shape)
 
 # Try training a very deep net with batchnorm
 hidden_dims = [50, 50, 50, 50, 50, 50, 50]
@@ -220,13 +226,6 @@ plt.show()
 #############################################################################
 #                     Fully Connected Nets with Batch Normalization
 #############################################################################
-
-# Load the CIFAR10 data.
-DIR_data = 'D:/CS231N_CNN/DataSet/cifar-10-batches-py/'
-# the mean image has been sub-tracted
-data = get_CIFAR10_data(DIR_data, num_training=49000, num_validation=1000)
-for k, v in data.items():
-  print("The shape of %s is " %k,v.shape)
 
 hidden_dims = [100, 100, 100, 100]
 num_train = 1000

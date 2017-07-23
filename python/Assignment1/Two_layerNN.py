@@ -13,7 +13,7 @@ from cs231n.vis_utils import visualize_grid
 
 if __name__ == '__main__':
     # Load up the CIFAR-10 data
-    cifar10_dir =  'D:/CS231N_CNN/DataSet/cifar-10-batches-py/'
+    cifar10_dir =  '../../DataSet/cifar-10-batches-py/'
     X_tr, y_tr, X_te, y_te = load_CIFAR10(cifar10_dir)
     num_training = 9000
     num_validation = 1000

@@ -32,7 +32,7 @@ if __name__ == '__main__':
     #                      CIFAR-10 Data Loading and Preprocessing                        #
     #######################################################################################
     # Load the raw CIFAR-10 data.
-    X_tr, y_tr, X_te, y_te = load_CIFAR10('D:/CS231N_CNN/DataSet/cifar-10-batches-py/')
+    X_tr, y_tr, X_te, y_te = load_CIFAR10('../../CS231N_CNN/DataSet/cifar-10-batches-py/')
     # As a sanity check, we print out the size of the traning ans test data
     print('Training data shape:   ', X_tr.shape)
     print('Training labels shape: ', y_tr.shape)

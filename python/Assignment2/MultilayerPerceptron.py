@@ -43,7 +43,7 @@ def run_model(weight_scale, learning_rate):
 if __name__ == '__main__':
 
   # Load the CIFAR10 data.
-  DIR_data = 'D:/CS231N_CNN/DataSet/cifar-10-batches-py/'
+  DIR_data = '../../DataSet/cifar-10-batches-py/'
   # the mean image has been sub-tracted
   data = get_CIFAR10_data(DIR_data, num_training=49000, num_validation=1000)
   for k, v in data.items():
