@@ -1,4 +1,5 @@
-# Assignment 1
+This is my knowledge comb and program implementation of CS231n. The jupyter notebook and python documents of Assignment 1 and 2 are provided. Assignment 3 will come soon.
+## Assignment 1
 
 In assignment 1, you will practice putting together a simple image classification pipeline, based on the k-Nearest Neighbor or the SVM/Softmax classifier. The goals of this assignment are as follows:
 
@@ -24,10 +25,9 @@ Q3: Implement a Softmax classifier
 The IPython Notebook *Softmax.ipynb* (*SoftMax.py*) will walk you through implementing the Softmax classifier.
 
 Q4: Two-Layer Neural Network
-
 The IPython Notebook *TwoLayerClassifier.ipynb* (*Two_layerNN.py*) will walk you through the implementation of a two-layer neural network classifier.
 
-# Assignment 2
+## Assignment 2
 
 In assignment 2, you will practice writing backpropagation code, and training Neural Networks and Convolutional Neural Networks. The goals of this assignment are as follows:
 
@@ -38,5 +38,3 @@ In assignment 2, you will practice writing backpropagation code, and training Ne
 - implement **dropout** to regularize networks
 - effectively cross-validate and find the best hyperparameters for Neural Network architecture
 - understand the architecture of Convolutional Neural Networks and train gain experience with training these models on data
-
-Q1: Fully-connected Neural Network (30 points)
