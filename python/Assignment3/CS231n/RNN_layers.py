@@ -134,4 +134,11 @@ def rnn_backward(dh, back):
   dprev = np.zeros(prev_h.shape)
 
   for t in range(T-1, -1, -1):
-    dx[:, t, :], dprev, dWx_local, dWh_local, db_
+    dx[:, t, :], dprev, dWx_local, dWh_local, db_local = rnn_step_backward(dh[:,t,:] + dprev, cache[t])
+    dWx += dWx_local
+    dWh += dWh_local
+    db += db_local 
+  
+  dh0 = dprev 
+
+  return dx, dh0, dWx, dWh
