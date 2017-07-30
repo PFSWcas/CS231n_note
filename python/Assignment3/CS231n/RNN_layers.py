@@ -384,4 +384,70 @@ def temporal_affine_forward(x, W, b):
   cache = x, W, b, out 
   return out, cache
 
-def 
+def temporal_affine_backward(dout, cache):
+  """
+  Backward pass for temporal affine layer.
+
+  Input:
+    - dout: Upstream gradients of shape (N, T, M)
+    - cache: Values from forward pass
+
+  Returns a tuple of:
+    - dx: Gradient of input, of shape (N, T, D)
+    - dw: Gradient of weights, of shape (D, M)
+    - db: Gradient of biases, of shape (M,)
+  """
+  x, W, b, out = cache 
+  N, T, D = x.shape 
+  M = b.shape 
+
+  dx = dout.reshape(N*T, M).dot(W.T).reshape(N, T, D)
+  dW = dout.reshape(N*T, M).T.dot(x.reshape(N*T, D)).T 
+  db = dout.sum(axis=(0, 1))
+
+  return dx, dw, db
+
+def temporal_softmax_loss(x, y, mask, verbose=False):
+  """
+  A temporal version of softmax loss for use in RNNS. 
+  We assume that we are making predictions over a vocabulary of size V for each timestep of a 
+  timeseries of length T, over a minibatch of size N. The input x gives scores for all vocabulary 
+  elements at all timesteps, and y gives the indices of the ground-truth element at each timestep. 
+  We use a cross-entropy loss at each timestep, summing the loss over all the timesteps and averaging
+  across the minibatch. 
+
+  As an additioanl complication, we may want to ignore the model output at some timesteps, since sequences
+  of different length may have been combined into a minibatch and padded with NULL tokens. The optional mask
+  argument tells us which elemnts should contribute to the loss. 
+
+  Inputs:
+    - x: input scores, of shape (N, T, V) 
+    - y: Ground-truth indices, of shape (N, T) where each element is in the range 0 <= y[i,t] < V 
+    - mask: Boolean array of shape (N, T) where mask[i, t] tells whether or not the scores at x[i,t] 
+            should contribute to the final loss. 
+
+  Returns a tuple of:
+    - loss: scalar giving loss 
+    - dx: gradient of loss with respect to scores x.  
+  """
+  N, T, V = x.shape 
+
+  x_flat = x.reshape(N*T, V)
+  y_flat = y.reshape(N*T)
+  mask_flat = mask.reshape(N*T)
+
+  probs = np.exp(x_flat - np.max(x_flat, axis = 1, keepdims=True))  # of shape (N*T, V)
+  probs /= np.sum(probs, axis=1, keepdims=True)                     # of shape (N*T, V)
+  
+  loss = -np.sum(mask_flat * np.log(probs[np.arange(N*T), y_flat])) / N
+
+  dx_flat = probs.copy 
+  dx_flat[np.range(N*T), y_flat] -= 1
+  dx_flat /= N 
+  dx_flat *= mask[:,None]
+
+  if verbose: print('dx_flat shape: ', dx_flat.shape)
+
+  dx = dx_flat.reshape(N, T, V)
+
+  return loss, dx
