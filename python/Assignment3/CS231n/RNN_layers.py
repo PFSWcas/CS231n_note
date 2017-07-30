@@ -360,16 +360,28 @@ def LSTM_backeard(dh, cache):
 
   dh0 = dprev 
 
-return dx, dh0, dWx, dWh, db
+  return dx, dh0, dWx, dWh, db
 
-def temporal_affine_forward(x, w, b):
+def temporal_affine_forward(x, W, b):
   """
   Forward pass for a temporal affine layer. 
   The input is a set of D-dimensional vectors arranged into a minibatch of N timeseries, each of 
   length T. We use an affine function to tranform each of those vectors into a new vector of dimension
-  N. 
+  M.
 
-  
+  Inputs:
+    - x: input data of shape (N, T, D)
+    - w: weights of shape (D, M)
+    - b: biases of shape (M, )
 
-
+  Returns a tuple of:
+    - out: output data of shape (N, T, M)
+    - cache: values needed for the backward pass.  
   """
+  N, T, D = x.shape
+  M = b.shape 
+  out = x.reshape(N*T, D).dot(W).reshape(N, T, M) + b 
+  cache = x, W, b, out 
+  return out, cache
+
+def 
