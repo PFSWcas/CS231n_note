@@ -8,3 +8,4 @@ Object:
  (2) use them it to train a model that can generate novel captions for images
 """
 from CS231n.gradient_check import eval_numerical_gradient, eval_numerical_gradient_array
+from CS231n.RNN_layers import *
