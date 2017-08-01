@@ -215,7 +215,7 @@ def sigmoid(x):
 
   return top / (1 + z)
 
-def LSTM_step_forward(x, prev_h, prev_c, Wh, b):
+def LSTM_step_forward(x, prev_h, prev_c, Wx, Wh, b):
   """
   Forward pass for a single timestep of an LSTM. 
 
