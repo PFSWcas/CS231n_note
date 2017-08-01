@@ -236,10 +236,10 @@ class CaptioningRNN(object):
                 next_h, _ = RNN_step_forward(x, prev_h, Wx, Wh, b)
             elif self.cell_type == 'LSTM':
                 next_h, next_c, _ = LSTM_step_forward(x, prev_h, prev_c, Wx, Wx, b)
-                prev_c = next_c
-            prev_h = next_h
+                prev_c = next_c   # update cell state, of shape (N, H)
+            prev_h = next_h       # update the hidden state, of shape (N, H)
 
-            next_h = np.expand_dims(next_h, axis=1)
+            next_h = np.expand_dims(next_h, axis=1) # of shape (N, 1, H)
             score, _ = temporal_affine_forward(next_h, W_vocab, b_vocab)
             captions[:,i] = list(np.argmax(score, axis=2))
             current_word_index = captions[:,i]
