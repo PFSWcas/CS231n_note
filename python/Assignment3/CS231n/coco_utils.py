@@ -1,15 +1,19 @@
+"""
+Platform: win10 64-bits
+python: 3.6
+"""
 import os, json
 import numpy as np
 import h5py
 
 
-def load_coco_data(base_dir='cs231n/datasets/coco_captioning',
+def load_coco_data(base_dir='../../DataSet/coco_captioning/',
                    max_train=None,
                    pca_features=True):
   data = {}
   caption_file = os.path.join(base_dir, 'coco2014_captions.h5')
   with h5py.File(caption_file, 'r') as f:
-    for k, v in f.iteritems():
+    for k, v in f.items():
       data[k] = np.asarray(v)
 
   if pca_features:
@@ -29,7 +33,7 @@ def load_coco_data(base_dir='cs231n/datasets/coco_captioning',
   dict_file = os.path.join(base_dir, 'coco2014_vocab.json')
   with open(dict_file, 'r') as f:
     dict_data = json.load(f)
-    for k, v in dict_data.iteritems():
+    for k, v in dict_data.items():
       data[k] = v
 
   train_url_file = os.path.join(base_dir, 'train2014_urls.txt')
@@ -57,19 +61,22 @@ def decode_captions(captions, idx_to_word):
   if captions.ndim == 1:
     singleton = True
     captions = captions[None]
+  
   decoded = []
   N, T = captions.shape
-  for i in xrange(N):
+  for i in range(N):
     words = []
-    for t in xrange(T):
+    for t in range(T):
       word = idx_to_word[captions[i, t]]
       if word != '<NULL>':
         words.append(word)
       if word == '<END>':
         break
     decoded.append(' '.join(words))
+  
   if singleton:
     decoded = decoded[0]
+  
   return decoded
 
 

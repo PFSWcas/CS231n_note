@@ -1,3 +1,7 @@
+"""
+Platform: win10 64-bits
+python: 3.6
+"""
 import numpy as np 
 
 """

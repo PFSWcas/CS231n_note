@@ -1,4 +1,7 @@
-
+"""
+Platform: win10 64-bits
+python: 3.6
+"""
 import numpy as np
 """
 This file implements various first-order update rules that are commonly used for 
