@@ -449,7 +449,7 @@ def temporal_softmax_loss(x, y, mask, verbose=False):
   dx_flat = probs.copy() 
   dx_flat[np.arange(dim_flat), y_flat] -= 1
   dx_flat /= N 
-  dx_flat *= mask[:,None]
+  dx_flat *= mask_flat[:, None]
 
   if verbose: print('dx_flat shape: ', dx_flat.shape)
 
