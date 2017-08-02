@@ -34,7 +34,7 @@ def RNN_step_forward(x, prev_h, Wx, Wh, b):
   # hidden state and any values you need for the backward pass in the next_h   #
   # and cache variables respectively.                                          #
   ##############################################################################
-  affine_output = prev_h.dot(Wh) + x.dot(Wx) + b
+  affine_output = prev_h.dot(Wh) + x.dot(Wx) + b    # of shape (N, H)
   next_h = np.tanh(affine_output)
   cache = (x, prev_h, Wx, Wh, affine_output, next_h)
 
@@ -96,7 +96,7 @@ def RNN_forward(x, h0, Wx, Wh, b):
   h, cache = None, None
   N, T, D = x.shape 
   _, H = h0.shape 
-  h = np.zeros(N, T, H)
+  h = np.zeros((N, T, H))
   cache = {}
   for t in range(T):
     if t==0:
@@ -106,7 +106,7 @@ def RNN_forward(x, h0, Wx, Wh, b):
   
   return h, cache 
 
-def RNN_backward(dh, back):
+def RNN_backward(dh, cache):
   """
   Compute the backward pass for a vanilla RNN over entire sequence of data. 
 
@@ -145,7 +145,7 @@ def RNN_backward(dh, back):
   
   dh0 = dprev 
 
-  return dx, dh0, dWx, dWh
+  return dx, dh0, dWx, dWh, db
 
 def word_embedding_forward(x, W):
   """
@@ -172,7 +172,7 @@ def word_embedding_forward(x, W):
     for t in range(T):
       out[n, t, :] = W[x[n,t],:]
   
-  cache = (x, v, D)
+  cache = (x, V, D)
 
   return out, cache
 
@@ -383,7 +383,7 @@ def temporal_affine_forward(x, W, b):
     - cache: values needed for the backward pass.  
   """
   N, T, D = x.shape
-  M = b.shape 
+  M = b.shape[0] 
   out = x.reshape(N*T, D).dot(W).reshape(N, T, M) + b 
   cache = x, W, b, out 
   return out, cache
@@ -403,13 +403,13 @@ def temporal_affine_backward(dout, cache):
   """
   x, W, b, out = cache 
   N, T, D = x.shape 
-  M = b.shape 
+  M = b.shape[0] 
 
   dx = dout.reshape(N*T, M).dot(W.T).reshape(N, T, D)
   dW = dout.reshape(N*T, M).T.dot(x.reshape(N*T, D)).T 
   db = dout.sum(axis=(0, 1))
 
-  return dx, dw, db
+  return dx, dW, db
 
 def temporal_softmax_loss(x, y, mask, verbose=False):
   """
@@ -435,18 +435,19 @@ def temporal_softmax_loss(x, y, mask, verbose=False):
     - dx: gradient of loss with respect to scores x.  
   """
   N, T, V = x.shape 
+  dim_flat = N * T
 
-  x_flat = x.reshape(N*T, V)
-  y_flat = y.reshape(N*T)
-  mask_flat = mask.reshape(N*T)
+  x_flat = x.reshape(dim_flat, V)
+  y_flat = y.reshape(dim_flat)
+  mask_flat = mask.reshape(dim_flat)
 
   probs = np.exp(x_flat - np.max(x_flat, axis = 1, keepdims=True))  # of shape (N*T, V)
   probs /= np.sum(probs, axis=1, keepdims=True)                     # of shape (N*T, V)
   
   loss = -np.sum(mask_flat * np.log(probs[np.arange(N*T), y_flat])) / N
 
-  dx_flat = probs.copy 
-  dx_flat[np.range(N*T), y_flat] -= 1
+  dx_flat = probs.copy() 
+  dx_flat[np.arange(dim_flat), y_flat] -= 1
   dx_flat /= N 
   dx_flat *= mask[:,None]
 

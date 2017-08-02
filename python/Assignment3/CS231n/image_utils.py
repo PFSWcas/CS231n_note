@@ -61,9 +61,7 @@ def image_from_url(url):
     with open(fname, 'wb') as ff:
       ff.write(r.data)
     img = imread(fname)
-    os.remove(fname)
+    #os.remove(fname)
     return img
-  except urllib2.URLError as e:
-    print('URL Error: ', e.reason, url)
-  except urllib2.HTTPError as e:
+  except urllib3.exceptions.HTTPError as e:
     print('HTTP Error: ', e.code, url)
