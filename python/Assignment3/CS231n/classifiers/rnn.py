@@ -42,9 +42,9 @@ class CaptioningRNN(object):
 
         vocab_size = len(word_to_idx)
 
-        self._null = word_to_idx['<NULL>']
-        self._start = word_to_idx.get('<START>', None)
-        self._end = word_to_idx.get('<END>', None)
+        self._null = word_to_idx['<NULL>']             # index for '<NULL>'
+        self._start = word_to_idx.get('<START>', None) # index for '<START>'
+        self._end = word_to_idx.get('<END>', None)     # index for '<END>'
 
         # initialize word vectros 
         self.params['W_embed'] = np.random.randn(vocab_size, wordvec_dim)
@@ -70,7 +70,7 @@ class CaptioningRNN(object):
 
         # cast parameters to correct dtype 
         for k, v in self.params.items():
-            self.params[k] = v.astype(self.stype)
+            self.params[k] = v.astype(self.dtype)
     def loss(self, features, captions):
         """
         Compute training-time loss for the RNN. We input image features and ground-truth captions for those images, 
@@ -93,7 +93,7 @@ class CaptioningRNN(object):
         # receiving word t. The first element of captions_in will be the START token, 
         # and the first element of captions_out will be the fitst word. 
         captions_in = captions[:, :-1]
-        captions_out = captions[:, 1:]
+        captions_out = captions[:, 1:]   # expected output
 
         # mask
         mask = (captions_out != self._null)

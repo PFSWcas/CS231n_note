@@ -80,7 +80,7 @@ class CaptioningSolver(object):
         self.optim_config = kwargs.pop('optim_config', {})
         self.lr_decay = kwargs.pop('lr_decay',1.0)
         self.batch_size = kwargs.pop('batch_size', 100)
-        self.num_epoches = kwargs.pop('num_epoches', 10)
+        self.num_epochs = kwargs.pop('num_epochs', 10)
         self.print_every = kwargs.pop('print_every', 10)
         self.verbose = kwargs.pop('verbose', True) 
 
@@ -121,7 +121,7 @@ class CaptioningSolver(object):
         be called manully. 
         """
         # make a minibatch of training data 
-        minibath = sample_coco_minibatch(self.data, 
+        minibatch = sample_coco_minibatch(self.data, 
                                         batch_size=self.batch_size,
                                         split = 'train')
         captions, features, urls = minibatch
@@ -180,7 +180,7 @@ class CaptioningSolver(object):
         """
         num_train = self.data['train_captions'].shape[0]
         iterations_per_epoch = max(np.int(num_train/self.batch_size), 1)
-        num_iterations = self.num_epoches * iterations_per_epoch
+        num_iterations = self.num_epochs * iterations_per_epoch
 
         for t in range(num_iterations):
             self._step()

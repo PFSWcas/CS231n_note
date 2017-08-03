@@ -13,6 +13,7 @@ from CS231n.RNN_layers import *
 from CS231n.classifiers.rnn import CaptioningRNN
 from CS231n.coco_utils import load_coco_data, sample_coco_minibatch, decode_captions
 from CS231n.image_utils import image_from_url
+from CS231n.Captioning_solver import CaptioningSolver
 
 import time, os, json
 import numpy as np
@@ -251,7 +252,7 @@ if __name__ == '__main__':
 
   print('dx error: ', rel_error(dx, dx_num))
 
-  # RNN for image captioning
+  # RNN for image captioning--forward
   N, D, W, H = 10, 20, 30, 40
   word_to_idx = {'<NULL>': 0, 'cat': 2, 'dog': 3}
   V = len(word_to_idx)
@@ -259,7 +260,7 @@ if __name__ == '__main__':
 
   model = CaptioningRNN(word_to_idx, 
                         input_dim=D,    # Dimension D of input image feature vectors
-                        wordvec_dim=W,  #  Dimension W of word vectors.
+                        wordvec_dim=W,  # Dimension W of word vectors.
                         hidden_dim=H,   # Dimension H for the hidden state of the RNN
                         cell_type='RNN',
                         dtype=np.float64)
@@ -275,3 +276,76 @@ if __name__ == '__main__':
   print('loss: ', loss)
   print('expected loss: ', expected_loss)
   print('difference: ', abs(loss - expected_loss))
+
+  # RNN----numeric gradient checking 
+  batch_size = 2
+  timesteps = 2
+  input_dim = 4
+  wordvec_dim = 5
+  hidden_dim = 6
+  word_to_idx = {'<NULL>': 0, 'cat': 2, 'dog': 3}
+  vocab_size = len(word_to_idx)
+
+  captions = np.random.randint(vocab_size, size=(batch_size, timesteps))
+  features = np.random.randn(batch_size, input_dim)
+
+  model = CaptioningRNN(word_to_idx,
+                        input_dim=input_dim,
+                        wordvec_dim=wordvec_dim,
+                        hidden_dim=hidden_dim,
+                        cell_type='RNN',
+                        dtype=np.float64,
+                        )
+
+  loss, grads = model.loss(features, captions)
+
+  for param_name in sorted(grads):
+    f = lambda _: model.loss(features, captions)[0]
+    param_grad_num = eval_numerical_gradient(f, model.params[param_name], verbose=False, h=1e-6)
+    e = rel_error(param_grad_num, grads[param_name])
+    print('%s relative error: %e' % (param_name, e))
+
+  # RNN --- overfit small dataset 
+  small_data = load_coco_data(max_train=100)
+
+  small_RNN_model = CaptioningRNN(cell_type='RNN',
+                                  word_to_idx=data['word_to_idx'],
+                                  input_dim=data['train_features'].shape[1],
+                                  hidden_dim=512,
+                                  wordvec_dim=256
+                                  )
+  small_RNN_solver = CaptioningSolver(small_RNN_model, small_data,
+           update_rule='Adam',
+           num_epochs=50,
+           batch_size=25,
+           optim_config={
+             'learning_rate': 5e-3,
+           },
+           lr_decay=0.95,
+           verbose=True, print_every=10,
+         )
+
+  small_RNN_solver.train()
+
+  # Plot the training losses
+  plt.plot(small_RNN_solver.loss_history)
+  plt.xlabel('Iteration')
+  plt.ylabel('Loss')
+  plt.title('Training loss history')
+  plt.show()
+
+  # Test-time samplng
+  for split in ['train', 'val']:
+    minibatch = sample_coco_minibatch(small_data, split=split, batch_size=2)
+    gt_captions, features, urls = minibatch
+    gt_captions = decode_captions(gt_captions, data['idx_to_word'])
+
+    sample_captions = small_RNN_model.sample(features)
+    sample_captions = decode_captions(sample_captions, data['idx_to_word'])
+
+    for gt_caption, sample_caption, url in zip(gt_captions, sample_captions, urls):
+      #print url
+      plt.imshow(image_from_url(url))
+      plt.title('%s\n%s\nGT:%s' % (split, sample_caption, gt_caption))
+      plt.axis('off')
+      plt.show()
