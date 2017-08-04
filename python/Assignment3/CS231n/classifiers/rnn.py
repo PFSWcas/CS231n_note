@@ -162,7 +162,7 @@ class CaptioningRNN(object):
         if self.cell_type == 'RNN':
             dword_vector, dh0, grads['Wx'], grads['Wh'], grads['b'] = RNN_backward(daffine_out, h_cache)
         elif self.cell_type == 'LSTM':
-            dword_vector, dh0, grads['Wx'], grads['Wh'], grads['b'] = LSTM_backeard(daffine_out, h_cache)
+            dword_vector, dh0, grads['Wx'], grads['Wh'], grads['b'] = LSTM_backward(daffine_out, h_cache)
         
         grads['W_embed'] = word_embedding_backward(dword_vector, embed_word_cache)
         grads['W_proj'] = features.T.dot(dh0)

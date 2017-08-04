@@ -328,7 +328,7 @@ def LSTM_forward(x, h0, Wx, Wh, b):
   
   return h, cache 
 
-def LSTM_backeard(dh, cache):
+def LSTM_backward(dh, cache):
   """
   Backward pass for an LSTM over an entire sequence of data. 
 
@@ -362,7 +362,7 @@ def LSTM_backeard(dh, cache):
     dWh+=dWh_local
     db +=db_local
 
-  dh0 = dprev 
+  dh0 = dprev_h 
 
   return dx, dh0, dWx, dWh, db
 

@@ -185,17 +185,17 @@ class CaptioningSolver(object):
         for t in range(num_iterations):
             self._step()
         
-        # may print the training loss
-        if self.verbose and t % self.print_every == 0:
-            print('(Iteration %d / %d) loss: %f' % (
-               t + 1, num_iterations, self.loss_history[-1]))
-        
-        # At the end of every epoch, increment the epoch counter and decay the learning rate.
-        epoch_end = (t+1) % iterations_per_epoch == 0
-        if epoch_end:
-            self.epoch += 1
-            for p in self.optim_configs:
-                self.optim_configs[p]['learning_rate'] *= self.lr_decay
-        
-        # Check train and val accuracy on the first iteration, the last
-        # iteration, and at the end of each epoch.
+            # may print the training loss
+            if self.verbose and t % self.print_every == 0:
+                print('(Iteration %d / %d) loss: %f' % (
+                t + 1, num_iterations, self.loss_history[-1]))
+            
+            # At the end of every epoch, increment the epoch counter and decay the learning rate.
+            epoch_end = (t+1) % iterations_per_epoch == 0
+            if epoch_end:
+                self.epoch += 1
+                for p in self.optim_configs:
+                    self.optim_configs[p]['learning_rate'] *= self.lr_decay
+            
+            # Check train and val accuracy on the first iteration, the last
+            # iteration, and at the end of each epoch.
