@@ -38,3 +38,13 @@ In assignment 2, you will practice writing backpropagation code, and training Ne
 - implement **dropout** to regularize networks
 - effectively cross-validate and find the best hyperparameters for Neural Network architecture
 - understand the architecture of Convolutional Neural Networks and train gain experience with training these models on data
+
+## Assignment 3
+
+Q1: Image Captioning with Vanilla RNNs
+
+The IPython notebook RNN_Captioning.ipynb will walk you through the implementation of an image captioning system on MS-COCO using vanilla recurrent networks.
+
+Q2: Image Captioning with LSTMs
+
+The IPython notebook LSTM_Captioning.ipynb will walk you through the implementation of Long-Short Term Memory (LSTM) RNNs, and apply them to image captioning on MS-COCO.
